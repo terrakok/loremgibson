@@ -1,0 +1,15 @@
+[versions]
+
+kotlin = "2.2.0"
+compose = "1.8.2"
+hotReload = "1.0.0-alpha09"
+
+[libraries]
+
+
+[plugins]
+
+multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+hotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "hotReload" }
