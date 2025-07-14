@@ -1,33 +1,58 @@
 package com.github.terrakok.loremgibson
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import loremgibson.composeapp.generated.resources.*
 import com.github.terrakok.loremgibson.theme.AppTheme
 import com.github.terrakok.loremgibson.theme.LocalThemeIsDark
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.Font
+import loremgibson.composeapp.generated.resources.Res
+import loremgibson.composeapp.generated.resources.arrow_forward
+import loremgibson.composeapp.generated.resources.copy
+import loremgibson.composeapp.generated.resources.document
+import loremgibson.composeapp.generated.resources.ic_dark_mode
+import loremgibson.composeapp.generated.resources.ic_light_mode
+import loremgibson.composeapp.generated.resources.refresh
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
@@ -68,9 +93,24 @@ internal fun App() = AppTheme {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter,
         ) {
+            val minW = with(LocalDensity.current) { 750.dp.roundToPx() }
+            val maxW = with(LocalDensity.current) { 1000.dp.roundToPx() }
+            var containerWidth by remember { mutableStateOf(minW) }
             Column(
                 modifier = Modifier
-                    .widthIn(max = 1000.dp)
+                    .fillMaxWidth()
+                    .onGloballyPositioned { containerWidth = it.size.width }
+                    .verticalScroll(rememberScrollState())
+                    .horizontalScroll(rememberScrollState())
+                    .layout { m, c ->
+                        val minC = containerWidth.coerceIn(minW, maxW)
+                        val placeable = m.measure(
+                            c.copy(minWidth = minC, minHeight = 0, maxWidth = minC, maxHeight = Int.MAX_VALUE)
+                        )
+                        layout(placeable.width, placeable.height) {
+                            placeable.place(0, 0)
+                        }
+                    }
                     .padding(40.dp)
             ) {
                 Row(
@@ -185,9 +225,11 @@ internal fun App() = AppTheme {
                             shape = RoundedCornerShape(16.dp)
                         )
                         .padding(16.dp)
-                        .verticalScroll(rememberScrollState())
                 ) {
-                    Text(text = txt)
+                    Text(
+                        text = txt,
+                        minLines  = 10,
+                    )
                 }
             }
         }
