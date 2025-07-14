@@ -2,7 +2,7 @@
 
 ### Desktop
 Run the desktop application: `./gradlew :composeApp:run`  
-Run the desktop **hot reload** application: `./gradlew :composeApp:jvmRunHot`  
+Run the desktop **hot reload** application: `./gradlew :composeApp:hotRunJvm`  
 Run desktop UI tests: `./gradlew :composeApp:jvmTest`  
 
 ### Wasm Browser (Alpha)
