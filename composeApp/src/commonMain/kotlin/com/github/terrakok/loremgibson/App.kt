@@ -26,6 +26,7 @@ import com.github.terrakok.loremgibson.theme.LocalThemeIsDark
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -63,98 +64,131 @@ internal fun App() = AppTheme {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(40.dp)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter,
         ) {
-            Text(
-                text = "Lorem Gibson",
-                style = MaterialTheme.typography.displayLarge
-            )
-            Text(
-                text = "Lorem Gibson is placeholder text generator.\nIt can be used in the graphic, print, and publishing industries for previewing layouts and visual mockups.",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            var sentencesCount by remember { mutableStateOf(5) }
-            var paragraphsCount by remember { mutableStateOf(3) }
-            var refresh by remember { mutableStateOf(false) }
-
-            val txt = remember(sentencesCount, paragraphsCount, refresh) {
-                (1..paragraphsCount).joinToString("\n\n") {
-                    (1..sentencesCount).joinToString(" ") {
-                        generateSentence(Random.nextInt(5..20))
-                    }
-                }
-            }
-
-            FlowRow {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Sentences: ",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    Counter(
-                        value = sentencesCount,
-                        onValueChange = { sentencesCount = it },
-                    )
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Paragraphs: ",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    Counter(
-                        value = paragraphsCount,
-                        onValueChange = { paragraphsCount = it },
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = { refresh = !refresh }
-                    ) {
-                        Image(
-                            imageVector = vectorResource(Res.drawable.refresh),
-                            contentDescription = "Refresh",
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
-                        )
-                    }
-
-                    val clipboard = LocalClipboard.current
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                clipboard.setClipEntry(txt.toClipEntry())
-                                snackbarHostState.showSnackbar("Text is copied", duration = SnackbarDuration.Short)
-                            }
-                        }
-                    ) {
-                        Image(
-                            imageVector = vectorResource(Res.drawable.copy),
-                            contentDescription = "Copy",
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            SelectionContainer(
-                modifier = Modifier.fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 1000.dp)
+                    .padding(40.dp)
             ) {
-                Text(text = txt)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Lorem Gibson",
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                    Spacer(Modifier.weight(1f))
+                    val uriHandler = LocalUriHandler.current
+                    IconButton(
+                        onClick = { uriHandler.openUri("https://github.com/terrakok/loremgibson") }
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.document),
+                            contentDescription = "Theme",
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
+                    }
+
+                    var themeIsDark by LocalThemeIsDark.current
+                    IconButton(
+                        onClick = { themeIsDark = !themeIsDark }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                if (themeIsDark) Res.drawable.ic_light_mode else Res.drawable.ic_dark_mode
+                            ),
+                            contentDescription = "Theme",
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
+                    }
+                }
+                Text(
+                    text = "Lorem Gibson is placeholder text generator.\nIt can be used in the graphic, print, and publishing industries for previewing layouts and visual mockups.",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                var sentencesCount by remember { mutableStateOf(5) }
+                var paragraphsCount by remember { mutableStateOf(3) }
+                var refresh by remember { mutableStateOf(false) }
+
+                val txt = remember(sentencesCount, paragraphsCount, refresh) {
+                    (1..paragraphsCount).joinToString("\n\n") {
+                        (1..sentencesCount).joinToString(" ") {
+                            generateSentence(Random.nextInt(5..20))
+                        }
+                    }
+                }
+
+                FlowRow {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Sentences: ",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                        Counter(
+                            value = sentencesCount,
+                            onValueChange = { sentencesCount = it },
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Paragraphs: ",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                        Counter(
+                            value = paragraphsCount,
+                            onValueChange = { paragraphsCount = it },
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = { refresh = !refresh }
+                        ) {
+                            Image(
+                                imageVector = vectorResource(Res.drawable.refresh),
+                                contentDescription = "Refresh",
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
+                            )
+                        }
+
+                        val clipboard = LocalClipboard.current
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    clipboard.setClipEntry(txt.toClipEntry())
+                                    snackbarHostState.showSnackbar("Text is copied", duration = SnackbarDuration.Short)
+                                }
+                            }
+                        ) {
+                            Image(
+                                imageVector = vectorResource(Res.drawable.copy),
+                                contentDescription = "Copy",
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                SelectionContainer(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = txt)
+                }
             }
         }
     }
