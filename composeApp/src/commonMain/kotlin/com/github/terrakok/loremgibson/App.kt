@@ -54,7 +54,6 @@ import loremgibson.composeapp.generated.resources.ic_light_mode
 import loremgibson.composeapp.generated.resources.refresh
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -83,7 +82,6 @@ private val gibsonWords = listOf(
     "shanty town", "tattoo", "human", "gang", "crypto-", "dissident"
 )
 
-@Preview
 @Composable
 internal fun App() = AppTheme {
     val snackbarHostState = remember { SnackbarHostState() }
