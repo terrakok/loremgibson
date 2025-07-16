@@ -1,11 +1,12 @@
 # Lorem Gibson
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/4cb06d51-0b01-4196-bcc6-42dde4136557" />
-
 > Lorem Gibson is placeholder text generator. 
 > It can be used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
 
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/4cb06d51-0b01-4196-bcc6-42dde4136557" />
+
 ## ☕ Support the Developer
+
 
 <p align="center">
   <a href="https://www.buymeacoffee.com/terrakok">
